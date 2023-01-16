@@ -3,6 +3,11 @@
 
 const Router = require('@koa/router');
 const router = new Router();
+const multer = require('@koa/multer');
+const path = require('path');
+const upload = multer({
+    dest: path.resolve(__dirname, '../', 'storage') // storage라는 폴더에 저장
+})
 
 const { myLogging } = require('./middleware/logging');
 const { verify } = require('./middleware/auth');
@@ -15,6 +20,8 @@ const apiFeedController = require('./api/feed/controller');
 // 도에인 기반 방식
 
 router.use(myLogging);  // 이 줄 이후에 어떤 페이지로 들어가든 myLogging 작동
+
+router.post('/file/upload', upload.single('file'), require('./api/file/controller').upload);    // middleware를 거쳐 controller의 upload 실행. 변수에 넣어도 상관없음
 
 router.get('/', webController.home);
 router.get('/page/:name', webController.page);

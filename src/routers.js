@@ -5,6 +5,7 @@ const Router = require('@koa/router');
 const router = new Router();
 
 const { myLogging } = require('./middleware/logging');
+const { verify } = require('./middleware/auth');
 
 const webController = require('./web/controller');
 const apiUserController = require('./api/user/controller');
@@ -27,6 +28,10 @@ router.get('/page/:name', webController.page);
 //     ctx.body = `${page} 페이지`;
 // });
 
+router.post('/api/user/login', apiUserController.login);
+router.post('/api/user/register', apiUserController.register);
+
+router.use(verify); // 회원가입과 로그인에는 없어야 함
 router.get('/api/user/:id', apiUserController.info);
 // router.get('/user/:id', (ctx, next) => {
 //     let id = ctx.params.id;

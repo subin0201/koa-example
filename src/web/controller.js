@@ -4,20 +4,22 @@ exports.home = (ctx, next) => {
 }
 
 // 약관, 개인정보처리방침 등 정적, 정보성 페이지
-exports.page = (ctx, next) => {
+exports.page = async (ctx, next) => {
     // let name = ctx.params.name; // 아래와 완전히 똑같다
     let { name } = ctx.params; // 위와 완전히 똑같다
-    ctx.body = name;
+    // ctx.body = name;
 
-    // let page = ctx.params.name; // 키 값 기반 계산
-    // let content;
-    // switch (page) {
-    //     case 'terms':
-    //         content = "이용약관";
-    //         break;
-    //     case 'policy':
-    //         content = "개인정보 처리방침";
-    //         break;
-    // }
-    // ctx.body = content;
+    let pagename = ctx.params.name; // 키 값 기반 계산
+    let content;
+    switch (pagename) {
+        case 'terms':
+            content = "이용약관";
+            break;
+        case 'policy':
+            content = "개인정보 처리방침";
+            break;
+    }
+    ctx.body = content;
+
+    await ctx.render('index' , { pagename : pagename });
 }

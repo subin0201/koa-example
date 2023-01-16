@@ -14,12 +14,15 @@ exports.page = async (ctx, next) => {
     switch (pagename) {
         case 'terms':
             content = "이용약관";
+            pagename = content;
             break;
         case 'policy':
             content = "개인정보 처리방침";
+            pagename = content;
             break;
     }
-    ctx.body = content;
+    // ctx.body = content;
 
     await ctx.render('index' , { pagename : pagename });
+    // await ctx.render('index' , { pagename });    // 동일하게 인식
 }

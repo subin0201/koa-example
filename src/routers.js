@@ -22,6 +22,7 @@ const apiFeedController = require('./api/feed/controller');
 router.use(myLogging);  // 이 줄 이후에 어떤 페이지로 들어가든 myLogging 작동
 
 router.post('/file/upload', upload.single('file'), require('./api/file/controller').upload);    // middleware를 거쳐 controller의 upload 실행. 변수에 넣어도 상관없음
+router.get('/file/:id', require('./api/file/controller').download); // 라우트를 정할 때 upload를 먼저 작성하기 -> upload를 id의 파라미터로 인식할 수 있기 때문임
 
 router.get('/', webController.home);
 router.get('/page/:name', webController.page);

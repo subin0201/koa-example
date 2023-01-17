@@ -10,7 +10,7 @@ exports.connection = mysql.createPool(
         host:process.env.DB_HOST,   // 중요한 파일 -> 설정 파일에 작성
         user: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
-        datebase: process.env.DB_DATABASE,
+        database: process.env.DB_DATABASE,
         waitForConnections: true,
         connectionLimit: 10,
         queueLimit: 0

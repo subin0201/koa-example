@@ -1,29 +1,7 @@
-// get the client
-const mysql = require('mysql2');
+const crypto = require('crypto');
 
-// create the connection to database
-const connection = mysql.createConnection({
- host: 'localhost',
- user: 'root',
- database: 'test'
-});
+let original = "admin1234";
+let salt = "mysalt01234";
 
-// simple query
-let name = "Page", age=45;
-connection.query(
-//  'SELECT * FROM `table` WHERE `name` = "Page" AND `age` > 45',
- `SELECT * FROM table WHERE name = "${name}" AND age > ${age}`,
- function(err, results, fields) {
- console.log(results); // results contains rows returned by server
- console.log(fields); // fields contains extra meta data about results, if available
- }
-);
-
-// with placeholder
-connection.query(
- 'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?',
- ['Page', 45],
- function(err, results) {
- console.log(results);
- }
-);
+let result = crypto.pbkdf2Sync(original, salt, 50, 255, 'sha512');
+console.log(result.toString('base64'));

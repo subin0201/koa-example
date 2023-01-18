@@ -1,5 +1,9 @@
 const { pool } = require('../../data');
 
+/**
+ * 모든 피드의 id와 작성 시간을 반환하는 함수
+ * @returns 모든 피드의 id와 작성 시간
+ */
 exports.feedFullView = async () => {
     const query = `SELECT id, created_at FROM feed`
     return await pool(query);
@@ -17,6 +21,17 @@ exports.feedCreate = async (user_id, image_id, content) => {
     (user_id, image_id, content)
     VALUES (?,?,?)`;
     return await pool(query, [user_id, image_id, content]);
+}
+
+/**
+ * 피드의 id를 이용해 피드의 모든 정보를 가져오는 함수
+ * @param {number} feed_id 피드의 id
+ * @returns 
+ */
+exports.feedShow = async (feed_id) => {
+    const query = `SELECT * FROM feed WHERE
+    id = ?`;
+    return await pool(query, [feed_id]);
 }
 
 /**

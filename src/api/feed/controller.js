@@ -1,26 +1,21 @@
 const jwt = require('jsonwebtoken');
-const { feedCreate, findId} = require('./query');
+const { feedFullView, feedCreate, findId} = require('./query');
 const { isNewFeed } = require('../../common/formatter/date');
 const { dateFromNow } = require('../../common/formatter/date');
 
 // 전체 피드 보기
-exports.index = (ctx, next) => {
-    let query = ctx.query;
+exports.index = async (ctx, next) => {
+    let query = await feedFullView();
+    ctx.body = "";
 
-    let result1 = isNewFeed(query.create_at);
-    // console.log("새글인가요? " + result1);
-    result1 = `새글인가요? ${result1}`;
-
-    let result2 = dateFromNow(query.create_at);
-    // console.log(result2);
-
-    // let {color, size, count} = ctx.query; // 아래와 동일
-    // query.color
-    // query.size
-    // query.count
-
-    ctx.body = query.id + '\n' + result1 + '\n' + result2;
-    // ctx.body = '피드 리스트';
+    for (var i = 0; i < query.length; i++){
+        var id = query[i]['id'];
+        var result1 = isNewFeed(query[i]['created_at']);
+        if(result1 == true) { var newFeed = "새글입니다."; }
+        else { var newFeed = "새글이 아닙니다."; }
+        var result2 = dateFromNow(query[i]['created_at']);
+        ctx.body = ctx.body + '\n' + id + '\t' + newFeed + '\t' + result2;
+    }
 }
 
 // 새 피드 작성 처리

@@ -1,7 +1,7 @@
 const { pool } = require('../../data');
 
 exports.feedFullView = async () => {
-    const query = `SELECT id, create_at content FROM feed`
+    const query = `SELECT id, created_at FROM feed`
     return await pool(query);
 }
 

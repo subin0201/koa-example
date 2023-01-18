@@ -16,7 +16,7 @@ exports.register = async (ctx, next) => {
     let { affectedRows } = await register(email, result.toString('base64'), name);  // base64 방식으로 암호화 후 회원가입
 
     if(affectedRows > 0){
-        let token = await generteToken({ email });
+        let token = await generteToken({ email });  // 안에 email 말고도 name 추가 가능
         ctx.body = token;
     } else {
         ctx.body = {result: "fail"}

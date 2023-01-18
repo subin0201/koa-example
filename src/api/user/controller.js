@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { registerm, login } = require('./query');
+const { register, login } = require('./query');
 const crypto = require('crypto');
 
 /** 해당 id의 회원정보들 */
@@ -16,7 +16,7 @@ exports.register = async (ctx, next) => {
     let { affectedRows } = await register(email, result.toString('base64'), name);  // base64 방식으로 암호화 후 회원가입
 
     if(affectedRows > 0){
-        let token = await generteToken({ name });
+        let token = await generteToken({ email });
         ctx.body = token;
     } else {
         ctx.body = {result: "fail"}
@@ -39,7 +39,7 @@ exports.login = async (ctx, next) => {
     if(item == null) {
         ctx.body = {result: "fail"};
     } else {
-        let token = await generteToken({name: item.name});
+        let token = await generteToken({email: item.email});
         ctx.body = token;
     }
     // if(id === 'admin' && pw === '1234') { // 계정이 있는 경우 토큰 발급
@@ -50,7 +50,11 @@ exports.login = async (ctx, next) => {
     // ctx.body = result;
 }
 
-
+/**
+ * jwt 토큰 생성
+ * @param {object} payload 추가적으로 저장할 payload
+ * @returns {string} jwt 토큰 string
+ */
 let generteToken = (payload) => {
     return new Promise((resolve, reject) => {
         jwt.sign(payload, process.env.APP_KEY, (error, token) => {

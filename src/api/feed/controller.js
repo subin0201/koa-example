@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+const { feedCreate, findId} = require('./query');
 const { isNewFeed } = require('../../common/formatter/date');
 const { dateFromNow } = require('../../common/formatter/date');
 
@@ -21,9 +23,15 @@ exports.index = (ctx, next) => {
 }
 
 // 새 피드 작성 처리
-exports.store = (ctx, next) => {
-    let body = ctx.request.body;
-    ctx.body = body;
+exports.store = async (ctx, next) => {
+    let { token } = ctx.request.header;
+    let payload = await TokenToEmail(token);
+    let user_id = await findId(payload.email);
+    let { image_id, content } = ctx.request.body;
+    ctx.body = user_id;
+
+    // let body = ctx.request.body;
+    // ctx.body = body;
     // ctx.body = '피드 작성 완료';
 }
 
@@ -43,4 +51,17 @@ exports.update = (ctx, next) =>{
 exports.delete = (ctx, next) => {
     let id = ctx.params.id;
     ctx.body = `${id} 피드 삭제`;
+}
+
+/**
+ * 토큰으로 사용자 이메일 반환
+ * @param {string} token jwt 토큰
+ * @returns {string} 사용자 email
+ */
+let TokenToEmail = (token) => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, process.env.APP_KEY, (error, payload) => {
+            (error) ? reject(error) : resolve(payload);
+        })
+    })
 }

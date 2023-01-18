@@ -7,18 +7,19 @@ const { dateFromNow } = require('../../common/formatter/date');
 exports.index = (ctx, next) => {
     let query = ctx.query;
 
-    let result1 = isNewFeed("2023-01-12 15:40:00");
-    console.log("새글인가요? " + result1);
+    let result1 = isNewFeed(query.create_at);
+    // console.log("새글인가요? " + result1);
+    result1 = `새글인가요? ${result1}`;
 
-    let result2 = dateFromNow("2023-01-12 01:10:00");
-    console.log(result2);
+    let result2 = dateFromNow(query.create_at);
+    // console.log(result2);
 
     // let {color, size, count} = ctx.query; // 아래와 동일
     // query.color
     // query.size
     // query.count
 
-    ctx.body = query;
+    ctx.body = query.id + '\n' + result1 + '\n' + result2;
     // ctx.body = '피드 리스트';
 }
 
@@ -28,7 +29,13 @@ exports.store = async (ctx, next) => {
     let payload = await TokenToEmail(token);
     let user_id = await findId(payload.email);
     let { image_id, content } = ctx.request.body;
-    ctx.body = user_id;
+
+    let result = await feedCreate(user_id.id, image_id, content);
+    if(result == null){
+        ctx.body = `${user_id.id} 피드 작성 실패`;
+    } else {
+        ctx.body = `${user_id.id} 피드 작성 완료`;
+    }
 
     // let body = ctx.request.body;
     // ctx.body = body;

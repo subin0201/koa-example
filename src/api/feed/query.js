@@ -1,7 +1,7 @@
 const { pool } = require('../../data');
 
 exports.feedFullView = async () => {
-    const query = `SELECT id, content FROM feed`
+    const query = `SELECT id, create_at content FROM feed`
     return await pool(query);
 }
 
@@ -14,13 +14,13 @@ exports.feedFullView = async () => {
  */
 exports.feedCreate = async (user_id, image_id, content) => {
     const query = `INSERT INTO feed
-    (user_id, email_id, content)
+    (user_id, image_id, content)
     VALUES (?,?,?)`;
     return await pool(query, [user_id, image_id, content]);
 }
 
 /**
- * 사용자의 email을 이용해 id를 가져오는 함수
+ * 사용자의 이메일을 이용해 id를 가져오는 함수
  * @param {string} email 사용자의 email
  * @returns {number} 사용자의 id
  */

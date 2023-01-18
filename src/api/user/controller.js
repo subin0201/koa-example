@@ -11,7 +11,7 @@ exports.info = (ctx, next) => {
 /** 회원 가입 */
 exports.register = async (ctx, next) => {
     let { email, password, name} = ctx.request.body;
-    let result = crypto.pbkdf2Sync(password, process.env.APP_KEY, 50, 100, 'sha512');  // 50회 반복, 최대 산출물의 길이 255, sha512 방식으로 암호화
+    let result = await crypto.pbkdf2Sync(password, process.env.APP_KEY, 50, 100, 'sha512');  // 50회 반복, 최대 산출물의 길이 255, sha512 방식으로 암호화
 
     let { affectedRows } = await register(email, result.toString('base64'), name);  // base64 방식으로 암호화 후 회원가입
 
@@ -32,7 +32,7 @@ exports.login = async (ctx, next) => {
     let { email, password } = ctx.request.body;    // 아래와 같음
     // let id = ctx.request.body.id;
     // let pw = ctx.request.body.pw;
-    let result = crypto.pbkdf2Sync(password, process.env.APP_KEY, 50, 100, 'sha512');   // 너무 길이 100으로 줄임
+    let result = await crypto.pbkdf2Sync(password, process.env.APP_KEY, 50, 100, 'sha512');   // 너무 길이 100으로 줄임
 
     let item = await login(email, result.toString('base64'));
 

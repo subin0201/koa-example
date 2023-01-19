@@ -1,11 +1,19 @@
 const jwt = require("jsonwebtoken");
-const { register, login } = require('./query');
+const { register, login, info } = require('./query');
 const crypto = require('crypto');
 
-/** 해당 id의 회원정보들 */
-exports.info = (ctx, next) => {
+/** 해당 id의 상세 회원정보 */
+exports.info = async (ctx, next) => {
     let id = ctx.params.id;
-    ctx.body = `${id} 회원에 대한 정보`;
+    let query = await info(id);
+    if(query == null){
+        ctx.body = `${id} 회원이 존재하지 않습니다.`;
+    } else {
+        let email = `email: ${query.email}`;
+        let name = `name: ${query.name}`;
+        let created_at = `created_at: ${query.created_at}`;
+        ctx.body = `${id} 회원에 대한 정보\n` + email + '\n' + name + '\n' + created_at;
+    }
 }
 
 /** 회원 가입 */
@@ -21,9 +29,6 @@ exports.register = async (ctx, next) => {
     } else {
         ctx.body = {result: "fail"}
     }
-
-    // let token = await generteToken({name: 'my-name'});
-    // ctx.body = token;
 }
 
 /** 로그인 */
@@ -42,12 +47,6 @@ exports.login = async (ctx, next) => {
         let token = await generteToken({email: item.email});
         ctx.body = token;
     }
-    // if(id === 'admin' && pw === '1234') { // 계정이 있는 경우 토큰 발급
-    //     result = await generteToken({name: 'my-name'});
-    // } else {
-    //     result = "아이디 혹은 패스워드가 일치하지 않습니다.";
-    // }
-    // ctx.body = result;
 }
 
 /**

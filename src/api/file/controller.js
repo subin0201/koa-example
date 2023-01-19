@@ -4,7 +4,7 @@ const fs = require('fs');
 // 파일 업로드
 exports.upload = async (ctx) => {
     let file = ctx.request.file;
-    let { affectedRows, insertId} = await create(file.originalname, file.path, file.size);
+    let { affectedRows, insertId } = await create(file.originalname, file.path, file.size);
 
     if(affectedRows > 0){
         ctx.body = {

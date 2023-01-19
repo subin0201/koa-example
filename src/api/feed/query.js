@@ -31,7 +31,8 @@ exports.feedCreate = async (user_id, image_id, content) => {
 exports.feedShow = async (feed_id) => {
     const query = `SELECT * FROM feed WHERE
     id = ?`;
-    return await pool(query, [feed_id]);
+    let result = await pool(query, [feed_id]);
+    return (result.length < 0) ? null : result[0];
 }
 
 /**
@@ -63,5 +64,27 @@ exports.feedDelete = async (feed_id) => {
 exports.findId = async (email) => {
     const query = `SELECT id FROM user WHERE email = ?`;
     let result = await pool(query, [email]);
+    return (result.length < 0) ? null : result[0];
+}
+
+/**
+ * 피드의 id로 작성자의 id를 가져오는 함수
+ * @param {number} feed_id 피드의 id
+ * @returns {number} 피드 작성자의 id
+ */
+exports.findFeedUser = async (feed_id) => {
+    const query = `SELECT user_id FROM feed WHERE id = ?`;
+    let result = await pool(query, [feed_id]);
+    return (result.length < 0) ? null : result[0];
+}
+
+/**
+ * 파일의 id로 그 파일의 전체 정보를 가져오는 함수
+ * @param {number} image_id 파일의 id
+ * @returns 특정 파일의 전체 정보
+ */
+exports.findFeedImage = async (image_id) => {
+    const query = `SELECT * FROM files WHERE id = ?`;
+    let result = await pool(query, [image_id]);
     return (result.length < 0) ? null : result[0];
 }

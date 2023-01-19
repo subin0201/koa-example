@@ -35,6 +35,27 @@ exports.feedShow = async (feed_id) => {
 }
 
 /**
+ * 피드의 내용을 수정하는 함수
+ * @param {number} feed_id 수정할 피드의 id
+ * @param {string} content 피드의 수정한 내용
+ * @returns 
+ */
+exports.feedUpdate = async (feed_id, content) => {
+    const query = `UPDATE feed SET content = ? WHERE id = ?`;
+    return await pool(query, [content, feed_id]);
+}
+
+/**
+ * 피드를 삭제하는 함수
+ * @param {number} feed_id 삭제할 피드의 id
+ * @returns 
+ */
+exports.feedDelete = async (feed_id) => {
+    const query = `DELETE FROM feed WHERE id = ?`;
+    return await pool(query, [feed_id]);
+}
+
+/**
  * 사용자의 이메일을 이용해 id를 가져오는 함수
  * @param {string} email 사용자의 email
  * @returns {number} 사용자의 id

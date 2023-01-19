@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { feedFullView, feedCreate, feedShow, findId} = require('./query');
+const { feedFullView, feedCreate, feedShow,feedUpdate, findId} = require('./query');
 const { isNewFeed } = require('../../common/formatter/date');
 const { dateFromNow } = require('../../common/formatter/date');
 
@@ -48,15 +48,19 @@ exports.show = async (ctx, next) => {
     let updated_at = `업데이트된 날짜: ${query[0].updated_at}`;
     let created_at = `작성된 날짜: ${query[0].updated_at}`;
     ctx.body = feed_id + '\n' + user_id + '\n' + image_id + '\n' + content + '\n' + updated_at + '\n' + created_at;
-    // ctx.body = query;
-
-    // ctx.body = `${id} 피드 상세`;
 }
 
 // 피드 수정
-exports.update = (ctx, next) =>{
+exports.update = async (ctx, next) =>{
     let id = ctx.params.id;
-    ctx.body = `${id} 피드 수정`;
+    let { content } = ctx.request.body;
+    let result = await feedUpdate(id, content);
+    if(result == null){
+        ctx.body = `${id} 피드 수정 실패`;
+    } else {
+        ctx.body = `${id} 피드 수정 완료`;
+    }
+    // ctx.body = `${id} 피드 수정`;
 }
 
 // 피드 삭제
